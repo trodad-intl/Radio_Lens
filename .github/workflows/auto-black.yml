@@ -1,0 +1,43 @@
+# GitHub Action that uses Black to reformat the Python code in an incoming pull request.
+# If all Python code in the pull request is complient with Black then this Action does nothing.
+# Othewrwise, Black is run and its changes are committed back to the incoming pull request.
+# https://github.com/cclauss/autoblack
+
+name: autoblack_pull_request
+on: [pull_request_target]
+permissions: write-all
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with: # https://github.com/stefanzweifel/git-auto-commit-action#checkout-the-correct-branch
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/setup-python@v4
+      - run: pip install black isort
+      # - run: isort ./src --gitignore --check
+      # - run: black --check ./src
+      # - name: If needed, commit black changes to the pull request
+      #   if: failure()
+      #   run: |
+      #     # printenv | grep GITHUB
+      #     # git config --global user.name 'Nahidujjaman Hridoy'
+      #     # git config --global user.email 'hridoyboss12@gmail.com'
+      #     # git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
+      #     isort ./src --gitignore
+      #     black ./src
+      #     git status
+      #     # git add -A
+      #     # git commit -asm "fixup! Format Python code with psf/black pull_request"
+      #     # git push
+      #     # git push --force origin
+      - run: |
+          isort ./src --gitignore
+      - name: Run linters
+        uses: wearerequired/lint-action@v2
+        with:
+          auto_fix: true
+          black: true
+          black_dir: "src"
+          black_auto_fix: true
