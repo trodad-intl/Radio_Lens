@@ -9,7 +9,7 @@ cryptography==42.0.5
 defusedxml==0.7.1
 dj-crontab==0.8.0
 dj-rest-auth==6.0.0
-Django==5.0.4
+Django==5.1.7
 django-allauth==0.61.1
 django-cleanup==8.1.0
 django-cors-headers==4.3.1
